@@ -1,32 +1,69 @@
-import express, { NextFunction, Request, Response } from "express";
-import morgan from "morgan";
+import { ApolloServer, gql } from "apollo-server";
+import { categories, products } from "./db";
 
-const app = express();
-const PORT = 3000;
-
-app.use(morgan("tiny"));
-
-app.get(
-  "/star-wars",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const response = await fetch(
-        "https://swapi.dev/api/people/" + Math.ceil(Math.random() * 10)
-      );
-      const responseJson = await response.json();
-
-      if (response) {
-        res.status(200).json(responseJson);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+const typeDefs = gql`
+  type Query {
+    hello: String
+    helloNumber: Int
+    helloArray: [String!]!
+    products: [Product!]!
+    product(id: ID!): Product
+    categories: [Category!]!
+    category(id: ID!): Category
+    productByCategory
   }
-);
-app.use("/", (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({ ping: "pong" });
-});
 
-app.listen(PORT, () => {
-  console.log("listening at", PORT);
+  type Category {
+    id: ID!
+    name: String!
+  }
+
+  type Product {
+    id: ID!
+    name: String!
+    image: String!
+    quantity: Int!
+    price: Float!
+    onSale: Boolean!
+  }
+`;
+
+interface QueryProductArgs {
+  id: String;
+}
+
+interface QueryCategoryArgs {
+  id: String;
+}
+
+const resolvers = {
+  Query: {
+    hello: () => {
+      return "world!";
+    },
+    helloNumber: () => {
+      return 7;
+    },
+    helloArray: () => {
+      return ["Hello", "Hello2", "Hello3"];
+    },
+    products: () => products,
+    product: (parent: any, args: QueryProductArgs) => {
+      const productId = args.id;
+
+      return products.find((product) => product.id === productId) || null;
+    },
+    categories: () => categories,
+    category: (parent: any, args: QueryCategoryArgs) => {
+      const categoryId = args.id;
+
+      return categories.find((category) => category.id === categoryId) || null;
+    },
+  },
+};
+
+const server = new ApolloServer({ typeDefs, resolvers });
+
+server.listen().then(({ url }) => {
+  console.log("Server is ready at " + url);
 });

@@ -10,12 +10,12 @@ const typeDefs = gql`
     product(id: ID!): Product
     categories: [Category!]!
     category(id: ID!): Category
-    productByCategory
   }
 
   type Category {
     id: ID!
     name: String!
+    products: [Product!]!
   }
 
   type Product {
@@ -60,6 +60,11 @@ const resolvers = {
       return categories.find((category) => category.id === categoryId) || null;
     },
   },
+  Category: {
+    products: (parent: any, args: QueryProductArgs) => {
+      console.log(parent);
+    }
+  }
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });

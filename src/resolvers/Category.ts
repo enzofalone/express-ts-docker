@@ -1,12 +1,13 @@
 import { QueryProductArgs } from "..";
-import { products } from "../db";
 
 export const Category = {
-    products: (parent: any, args: QueryProductArgs) => {
-      const categoryId = parent.id;
-
-      return (
-        products.filter((product) => product.categoryId === categoryId) || []
-      );
-    },
-  }
+  products: (
+    { id: categoryId }: any,
+    args: QueryProductArgs,
+    { products }: any
+  ) => {
+    return (
+      products.filter((product: any) => product.categoryId === categoryId) || []
+    );
+  },
+};

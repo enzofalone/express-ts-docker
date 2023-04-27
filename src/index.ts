@@ -19,7 +19,11 @@ const resolvers = {
   Product,
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: { categories, products },
+});
 
 server.listen().then(({ url }) => {
   console.log("Server is ready at " + url);

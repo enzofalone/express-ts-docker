@@ -1,10 +1,8 @@
 import { QueryProductArgs } from "..";
-import { categories } from "../db";
 
 export const Product = {
-    category: (parent: any, args: QueryProductArgs) => {
-      const categoryId = parent.categoryId;
+    category: ({categoryId}: any, args: QueryProductArgs, {categories}: any) => {
 
-      return categories.find((category) => category.id === categoryId) || null;
+      return categories.find((category: any) => category.id === categoryId) || null;
     },
   }

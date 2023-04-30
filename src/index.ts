@@ -1,5 +1,5 @@
 import { ApolloServer, gql } from "apollo-server";
-import { categories, products } from "./db";
+import { categories, products, reviews } from "./db";
 import { typeDefs } from "./schema";
 import { Query } from "./resolvers/Query";
 import { Category } from "./resolvers/Category";
@@ -22,7 +22,7 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: { categories, products },
+  context: { categories, products, reviews },
 });
 
 server.listen().then(({ url }) => {

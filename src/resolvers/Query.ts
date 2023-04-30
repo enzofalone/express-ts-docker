@@ -22,4 +22,10 @@ export const Query = {
       categories.find((category: any) => category.id === categoryId) || null
     );
   },
+  reviews: (parent: any, args: any, {reviews}: any) => {
+    return reviews
+  },
+  review: (parent: any, {id: reviewId}: any, {reviews}: any) => {
+    return reviews.find((review: any) => review.id === reviewId);
+  }
 };
